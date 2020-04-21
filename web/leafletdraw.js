@@ -107,5 +107,5 @@ function startDraw() {
 }
 
 function refreshDraw() {
-
+	//TODO: clear map, re-place icons
 }

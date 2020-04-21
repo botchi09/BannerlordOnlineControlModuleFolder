@@ -14,7 +14,12 @@ function calcMapSizes() {
 	mapSize.yMin = mapSize.yCenter - mapSize.yMaxDist
 }
 
-allData = {lords: {}, mobileparties: {}, settlements: {}, kingdoms: {}, clans: {}}
+allData = {}
+
+function resetAllData() {
+	allData = {lords: {}, mobileparties: {}, settlements: {}, kingdoms: {}, clans: {}}
+}
+resetAllData()
 
 allData.settlements.loaded = function() {
 	var thisData = allData.settlements.data
@@ -151,7 +156,10 @@ function dataLoad(callback) {
 	}
 }
 
-
+function refreshData(callback) {
+	resetAllData() 
+	dataLoad(callback)
+}
 
 
 				
