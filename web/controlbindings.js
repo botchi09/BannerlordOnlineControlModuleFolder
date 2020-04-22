@@ -15,5 +15,7 @@ addAction("setRelation")
 addAction("kill")
 
 function attachControlBindings() {
-	
+	$("#refreshButton").click(() => {
+		refresh()
+	})
 }

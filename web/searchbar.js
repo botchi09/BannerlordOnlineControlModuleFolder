@@ -14,7 +14,7 @@ function attachSearchClickEvents() {
 }
 
 function goToStringId(stringId) {
-	var entity = allData.mobileparties.data[stringId] //todo: settlements as well
+	var entity = allData.mobileparties.data[stringId] || allData.settlements.data[stringId]
 	map.panTo([entity.x*mapScale,entity.y*mapScale], 13)
 }
 

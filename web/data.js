@@ -6,6 +6,8 @@ mapSize = {
 	yMaxDist: 360	
 }
 
+
+
 function calcMapSizes() {
 	mapSize.xMax = mapSize.xCenter + mapSize.xMaxDist
 	mapSize.yMax = mapSize.yCenter + mapSize.yMaxDist
@@ -14,10 +16,13 @@ function calcMapSizes() {
 	mapSize.yMin = mapSize.yCenter - mapSize.yMaxDist
 }
 
-allData = {}
+allData = {lords: {}, mobileparties: {}, settlements: {}, kingdoms: {}, clans: {}}
 
 function resetAllData() {
-	allData = {lords: {}, mobileparties: {}, settlements: {}, kingdoms: {}, clans: {}}
+	var keys = Object.keys(allData)
+	for (var i=0;i<keys.length;i++) {
+		allData[keys[i]].data = {}
+	}
 }
 resetAllData()
 
@@ -25,6 +30,7 @@ allData.settlements.loaded = function() {
 	var thisData = allData.settlements.data
 	for (var key in thisData) {
 		if (thisData.hasOwnProperty(key)) {  
+			fixEntityRotation(thisData[key])
 			thisData[key].troopRoster = []
 		}
 	}	
@@ -35,6 +41,7 @@ allData.mobileparties.loaded = function() {
 	var thisData = allData.mobileparties.data
 	for (var key in thisData) {
 		if (thisData.hasOwnProperty(key)) {
+			fixEntityRotation(thisData[key])
 			if (thisData[key].settlementId) {
 				var garrison = allData.settlements.data[thisData[key].settlementId].troopRoster
 				if (garrison[thisData[key].stringId] == null) {
@@ -45,8 +52,11 @@ allData.mobileparties.loaded = function() {
 				var armyLeader = thisData[thisData[key].armyLeaderId]
 				if (!armyLeader.army) {
 					armyLeader.army = []
+					armyLeader.name += "'s Army"
 				}
-				armyLeader.army.push(thisData[key].stringId)
+				if (thisData[key].stringId !== armyLeader.stringId) {
+					armyLeader.army.push(thisData[key].stringId)
+				}
 			}
 		}
 	}			
