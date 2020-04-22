@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<script>
+			var isAuthing = false
+			function tryAuth() {
+				if (!isAuthing) {
+					isAuthing = true
+					document.cookie = "password=" + document.getElementById("password").value
+					document.getElementById("loginstatus").innerHTML = "Logging in..."
+					setTimeout(() => {location.reload()}, 1000)
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<label for="password">Password:</label><br>
+		<input type="text" id="password" name="password" value="John"><br>
+		<input type="submit" value="Submit" onclick="tryAuth()">
+		<h1 id="loginstatus"></h1>
+	</body>
+</html>
