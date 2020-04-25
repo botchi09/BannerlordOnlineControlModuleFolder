@@ -88,8 +88,8 @@
 				<br />
 				<div id="actionControls">
 					<div id="actionTargets">
-						<p>Targets</p>
-						<input id="targetButton" type="submit" value="set target"/>
+						<p>Subhects/Object</p>
+						<input id="targetButton" type="submit" value="set object"/>
 						<input id="subjectButton" type="submit" value="add subject"/>
 						<input id="subjectNumber" style="width:55px" type="number" value="1" min="1"/>
 					</div>
@@ -115,17 +115,25 @@
 						<input id="refreshButton" type="submit" value="refresh"/>
 					</div>
 				</div>
-				<div id="changeDisplay">
-					<!--div id="targetStringIdContainer">
-						<div id="targetStringId">target</div>
-						<div>action</div>
-						<div>subjects (expandable)</div-->
+				<div id="changeDisplayContainer">
+					<p>Staged Changes<p>
+					<div id = "changeDisplayTemplate" style="display:none;">
+						<!-- for keyword reasons, we use target instead of object-->
+						<input type="submit" value="C" onclick="clearTarget(this)"/>Object:<div id="target"></div><br />
+						<input type="submit" value="C" onclick="clearActions(this)"/>Actions:<div id="actions"></div><br />
+						<input type="submit" value="C" onclick="clearSubjects(this)"/>Subjects:<div id="subjects"></div><br />
+						
 					</div>
+				</div>
+				<div id="messageContainer">
+					<a id="message" style="font-size: 18px;"></a>
+					<img id="loadingGif" width=25 height=25 src="https://media.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif" style="display:none;"/>
 				</div>
 			</div>
 			<div id="mapcontainerparent">
 				<div id="mapcontainer"></div>
 			</div>
+			
 		</div>
 		
 

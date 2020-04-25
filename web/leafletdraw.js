@@ -2,6 +2,7 @@ mapScale = 0.005 //Standard map scalar
 var startPos = {x: 613.84753, y: 435.935}
 map = null //global map object
 var layerIds = {} //key indexed list of layers
+var pointGroup = null
 
 function startDraw() {
 	
@@ -16,6 +17,11 @@ function startDraw() {
 		startPos.y = playerParty.y
 		map = L.map("mapcontainer").setView([startPos.x*mapScale, startPos.y*mapScale], 13)
 	}
+	
+	pointGroup = L.featureGroup([])
+	.on('click', function(e) { addToSearchBox(e.layer.stringId) })
+    .addTo(map)
+
 	/*var map = L.map('mapcontainer', {
 		crs: L.CRS.Simple
 	});
@@ -34,7 +40,7 @@ function startDraw() {
 			newStringId = party.leaderId
 		}
 		
-		return newName + " | " + (party.troops || 1) + "+" + (party.prisoners || 0) + "p | " + behavior + " | " + newStringId
+		return newName + " | " + (party.strength || 1) + "+" + (party.prisoners || 0) + "p | " + behavior + " | " + newStringId
 	}
 
 	function createClickableLine(name, stringId) {
@@ -58,7 +64,7 @@ function startDraw() {
 		}
 	}
 	
-	//Places arrows/icon to indicate party behaviour
+	//Places arrows/icon to indicate party behaviour TODO: Arrows library is bugged. A custom solution is now required.
 	function createIntentionIndicator(party, tether) {
 		
 		if (party.isHolding && tether.arrow != null) {
@@ -137,7 +143,7 @@ function startDraw() {
 					for (var i=0; i<party.army.length;i++) {
 						var armyParty = mobilepartiesData[party.army[i]]
 						createClickableLine(getPartyName(armyParty), party.army[i]).appendTo(popupHtml)
-						style.radius += armyParty.troops
+						style.radius += armyParty.strength
 						
 						cleanShape(layerIds[party.army[i]])
 					}
@@ -154,7 +160,7 @@ function startDraw() {
 				//No army!
 				createClickableLine(getPartyName(party), party.stringId).appendTo(popupHtml)
 				chosenParty = party
-				style.radius += party.troops * troopRadiusMultiplier
+				style.radius += party.strength * troopRadiusMultiplier
 				
 			}
 			
@@ -162,13 +168,14 @@ function startDraw() {
 				circle.setLatLng([party.x*mapScale, party.y*mapScale]) //army parties occupy same space as their leaders, so no problem
 				
 				circle.stringId = chosenParty.stringId
-				circle.bindTooltip(chosenParty.name + " (" + chosenParty.troops + ") | " + chosenParty.behavior)
+				circle.bindTooltip(chosenParty.name + " (" + chosenParty.strength + ") | " + chosenParty.behavior)
 				circle.bindPopup(popupHtml.html())
 				circle.setStyle(style)
 				circle.setRadius(style.radius)
 				createIntentionIndicator(chosenParty, circle)
 				if (!doNotCreate) {
 					circle.addTo(map)
+					pointGroup.addLayer(circle)
 					layerIds[circle.stringId] = circle
 					
 
@@ -197,16 +204,16 @@ function startDraw() {
 		
 		switch (settlementsData[key].settlementType) {
 			case 0:
-			style.radius = 600
+			style.radius = 900
 			break;
 			case 1:
 			style.radius = 450
 			break;
 			case 2:
-			style.radius = 300
+			style.radius = 200
 			break;
 			case 3:
-			style.radius = 150
+			style.radius = 100
 			break;
 		}
 		
@@ -228,14 +235,14 @@ function startDraw() {
 		var myIcon = L.divIcon({className: "maplabel", html: "<div class='maplabelcontainer'><a class='maplabel' style='color:" + faction.labelColor + ";'>" + settlementsData[key].name + "</a></div>"});
 
 		var textMarker = L.marker([settlementsData[key].x*mapScale + 0.007, (settlementsData[key].y*mapScale) - 0.007], {icon: myIcon})
-		textMarker.stringId = circle.stringId + "_text"
+		textMarker.stringId = circle.stringId // + "_text" //It doesn't actually affect anything as we never reverence by this ID
 		if (layerIds[textMarker.stringId]) {
 			layerIds[textMarker.stringId].remove()//We can't change style of existing markers easily, for some reason.
 		}
 		layerIds[textMarker.stringId] = textMarker
 		
 		var popupHtml = $("<div></div>")
-		createClickableLine("<h3>" + settlementsData[key].name + "</h3>", settlementsData[key].stringId).appendTo(popupHtml)
+		createClickableLine("<h3>" + settlementsData[key].name + " | " + settlementsData[key].stringId + "</h3>", settlementsData[key].stringId).appendTo(popupHtml)
 		
 		//popupHtml.append(header)
 		if (garrison.length > 0) {
@@ -249,11 +256,14 @@ function startDraw() {
 		
 		textMarker.bindPopup(popupHtml.html())
 		textMarker.addTo(map)
+		pointGroup.addLayer(textMarker)
 		circle.bindPopup(popupHtml.html())
 		circle.setRadius(style.radius) //SetStyle with radius was never fixed...
 		circle.setStyle(style)
 		if (!doNotCreate) {
 			circle.addTo(map)
+			circle.bringToBack()
+			pointGroup.addLayer(circle)
 		}
 	}
 }

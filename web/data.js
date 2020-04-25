@@ -171,5 +171,14 @@ function refreshData(callback) {
 	dataLoad(callback)
 }
 
-
+//Returns settlement, party from stringId
+function getEntityFromStringId(stringId) {
+	if (allData.settlements.data[stringId] != null) {
+		return allData.settlements.data[stringId]
+	}
+	if (allData.mobileparties.data[stringId] != null) {
+		return allData.mobileparties.data[stringId]
+	}
+	return null
+}
 				
