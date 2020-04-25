@@ -14,3 +14,4 @@ KNOWN ISSUES
 - Lots of repeated code in server
 - Sometimes jquery UI arrows bug out, a custom solution is needed
 - Reloading the game causes server thread issues and crashes
+- Relations and number of subjects are nonfunctional
