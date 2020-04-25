@@ -1,16 +1,14 @@
-
-//TODO: create display UI
-var stagedChanges = null
-
-//Reset UI, reset staging data
-function resetStagedChanges() {
-	stagedChanges = {}
-	stagedChanges.target = "" //stringid of target
-	stagedChanged.subjects = {} //array of stringid of subjects
-	stagedChanges.action = null //enum of action
+function ActionRequest() {
+	this.target = "" //stringid of target
+	this.subjects = [] //array of stringid of subjects
+	this.actions = [] //string of actions
 }
 
-function postChanges() {
+function postChanges(stagedChanges) {
+	
+	//TODO: List of EntityActionRequest to multi-process queries. For now, single index only.
+	stagedChanges = [stagedChanges]
+	
 	$.post( "localhost/stagechanges", stagedChanges, function(data) {
 		console.log("Data recieved!")
 	})
@@ -22,3 +20,4 @@ function postChanges() {
 		console.log("Failed to stage changes?!")
 	})
 }
+

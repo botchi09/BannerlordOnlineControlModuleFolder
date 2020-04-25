@@ -53,3 +53,18 @@ function attachAutoComplete() {
     })
         
 }
+
+function getSearchBarStringId() {
+	return $("#searchInput").val()
+}
+
+function isSearchBarStringIdValid() {
+	if (allData.mobileparties.data[getSearchBarStringId()] != null) {
+		return true
+	}
+	if (allData.settlements.data[getSearchBarStringId()] != null) {
+		return true
+	}
+	return false
+
+}
