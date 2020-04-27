@@ -6,6 +6,9 @@ function ActionRequest() {
 
 function postChanges(stagedChanges) {
 	
+	//Reset any existing behaviour by default
+	stagedChanges.actions.unshift("Reset")
+	
 	//TODO: List of EntityActionRequest to multi-process queries. For now, single index only.
 	stagedChanges = [stagedChanges]
 	

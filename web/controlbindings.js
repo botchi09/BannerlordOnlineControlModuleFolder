@@ -30,6 +30,7 @@ function bindActionButtons() {
 	//These actions are sent to client
 	addActionButtonBind("Engage", "#engageButton", (id)=>{addAction(id)})
 	addActionButtonBind("Escort", "#escortButton", (id)=>{addAction(id)})
+	addActionButtonBind("GoAround", "#goAroundButton", (id)=>{addAction(id)})
 	addActionButtonBind("AiOff", "#AiOffButton", (id)=>{addAction(id)})
 	addActionButtonBind("AiOn", "#AiOnButton", (id)=>{addAction(id)})
 	//addActionButtonBind("SetRelation")

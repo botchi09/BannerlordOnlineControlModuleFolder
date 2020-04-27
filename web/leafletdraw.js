@@ -3,6 +3,7 @@ var startPos = {x: 613.84753, y: 435.935}
 map = null //global map object
 var layerIds = {} //key indexed list of layers
 var pointGroup = null
+var labelIdentifier = "_text"
 
 function startDraw() {
 	
@@ -19,7 +20,15 @@ function startDraw() {
 	}
 	
 	pointGroup = L.featureGroup([])
-	.on('click', function(e) { addToSearchBox(e.layer.stringId) })
+	.on('click', function(e) {
+		var searchString = e.layer.stringId
+		
+		//Functionality to prevent labels giving improper stringIds
+		if (e.layer instanceof L.Marker) {
+			searchString = searchString.substring(0, searchString.length-labelIdentifier.length)
+		}
+		addToSearchBox(searchString)
+		})
     .addTo(map)
 
 	/*var map = L.map('mapcontainer', {
@@ -72,7 +81,7 @@ function startDraw() {
 		}
 		if (party.settlementId == null && tether != null) {
 			if ((party.x !== party.xTarget && party.y !== party.yTarget) && !party.isHolding) {
-				var arrow = tether.arrow || L.polyline([]).arrowheads({size: "10px", fill: true})
+				var arrow = tether.arrow || L.polyline([])//.arrowheads({size: "10px", fill: true})
 				var targetCoords = [party.xTarget*mapScale, party.yTarget*mapScale]
 				if (party.stringIdTargetSettlement != null) {
 					var targetSettlement = settlementsData[party.stringIdTargetSettlement]
@@ -235,7 +244,7 @@ function startDraw() {
 		var myIcon = L.divIcon({className: "maplabel", html: "<div class='maplabelcontainer'><a class='maplabel' style='color:" + faction.labelColor + ";'>" + settlementsData[key].name + "</a></div>"});
 
 		var textMarker = L.marker([settlementsData[key].x*mapScale + 0.007, (settlementsData[key].y*mapScale) - 0.007], {icon: myIcon})
-		textMarker.stringId = circle.stringId // + "_text" //It doesn't actually affect anything as we never reverence by this ID
+		textMarker.stringId = circle.stringId  + labelIdentifier
 		if (layerIds[textMarker.stringId]) {
 			layerIds[textMarker.stringId].remove()//We can't change style of existing markers easily, for some reason.
 		}
@@ -260,6 +269,7 @@ function startDraw() {
 		circle.bindPopup(popupHtml.html())
 		circle.setRadius(style.radius) //SetStyle with radius was never fixed...
 		circle.setStyle(style)
+		
 		if (!doNotCreate) {
 			circle.addTo(map)
 			circle.bringToBack()
